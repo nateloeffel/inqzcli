@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 )
 
 func main() {
@@ -13,20 +14,36 @@ func main() {
 		os.Exit(0)
 	}
 
-	if args[1] == "discord" {
-		fmt.Println("Discord")
-		file, err := os.OpenFile("index.js", os.O_WRONLY|os.O_CREATE, 0644)
-		if err != nil {
-			// Handle the error
-			panic(err)
-		}
-		defer file.Close()
+	if args[1] == "create" {
+		if len(args) > 2 && args[2] == "discord" {
+			fmt.Println("Creating Discord Bot")
 
-		// Write string to file
-		_, err = file.WriteString("console.log(\"hello\")\n")
-		if err != nil {
-			// Handle the error
-			panic(err)
+			cmd := exec.Command("git", "clone", "https://github.com/nateloeffel/BaseDiscordBot.git")
+			_, err := cmd.CombinedOutput()
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+
+			file, err := os.OpenFile("./BaseDiscordBot/.env", os.O_WRONLY|os.O_CREATE, 0644)
+			if err != nil {
+				// Handle the error
+				panic(err)
+			}
+			defer file.Close()
+
+			error := os.Remove("./BaseDiscordBot/.env.example")
+			if error != nil {
+				panic(err)
+			}
+
+			// Write string to file
+			_, err = file.WriteString("GUILD_ID=\nCLIENT_ID=\nTOKEN=")
+			if err != nil {
+				// Handle the error
+				panic(err)
+			}
 		}
+
 	}
 }
