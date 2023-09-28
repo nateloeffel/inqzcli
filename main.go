@@ -92,7 +92,8 @@ func main() {
 			port = string(args[2])
 		}
 		http.HandleFunc("/", handler)
-		http.ListenAndServe( ":" + port, nil)
+		http.ListenAndServe(":"+port, nil)
 		fmt.Println("Running")
+
 	}
 }
