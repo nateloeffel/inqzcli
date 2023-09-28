@@ -17,7 +17,7 @@ This will make a request to the [ipify API](https://www.ipify.org/) and return y
 To get geolocation information for an IP address, run the following command:
 
 ```
-inqzcli geolocate <ip_address>
+inqzcli checkip <ip_address>
 ```
 
 Replace `<ip_address>` with the IP address you want to geolocate. This will make a request to the [ipstack API](https://ipstack.com/) and return information such as the country, city, and latitude/longitude coordinates of the IP address.
