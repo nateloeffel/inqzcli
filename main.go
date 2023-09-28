@@ -1,10 +1,17 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
+	"net/http"
 )
+
+type IPResponse struct {
+	IP string `json:"ip"`
+}
 
 func main() {
 
@@ -51,5 +58,30 @@ func main() {
 		} else {
 			fmt.Println("You must pass an argument with create.")
 		}
+	} else if args[1] == "ip" {
+		resp, err := http.Get("https://api.ipify.org?format=json")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	// Reading the response body
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	// Unmarshalling the JSON response
+	var ipResponse IPResponse
+	err = json.Unmarshal(body, &ipResponse)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	// Printing the IP address
+	fmt.Println("Your IP address is:", ipResponse.IP)
 	}
 }
