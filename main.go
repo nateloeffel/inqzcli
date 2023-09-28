@@ -3,10 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
+	"net/http"
 	"os"
 	"os/exec"
-	"net/http"
 )
 
 type IPResponse struct {
@@ -67,7 +67,7 @@ func main() {
 	defer resp.Body.Close()
 
 	// Reading the response body
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -80,7 +80,6 @@ func main() {
 		fmt.Println("Error:", err)
 		return
 	}
-
 	// Printing the IP address
 	fmt.Println("Your IP address is:", ipResponse.IP)
 	}
