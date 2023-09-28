@@ -13,6 +13,10 @@ type IPResponse struct {
 	IP string `json:"ip"`
 }
 
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello, World!")
+}
+
 func main() {
 
 	args := os.Args
@@ -60,27 +64,35 @@ func main() {
 		}
 	} else if args[1] == "ip" {
 		resp, err := http.Get("https://api.ipify.org?format=json")
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-	defer resp.Body.Close()
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		defer resp.Body.Close()
 
-	// Reading the response body
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
+		// Reading the response body
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
 
-	// Unmarshalling the JSON response
-	var ipResponse IPResponse
-	err = json.Unmarshal(body, &ipResponse)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-	// Printing the IP address
-	fmt.Println("Your IP address is:", ipResponse.IP)
+		// Unmarshalling the JSON response
+		var ipResponse IPResponse
+		err = json.Unmarshal(body, &ipResponse)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		// Printing the IP address
+		fmt.Println("Your IP address is:", ipResponse.IP)
+	} else if args[1] == "serve" {
+		port := "8080"
+		if len(args) > 2 {
+			port = string(args[2])
+		}
+		http.HandleFunc("/", handler)
+		http.ListenAndServe( ":" + port, nil)
+		fmt.Println("Running")
 	}
 }
