@@ -92,8 +92,8 @@ func main() {
 			port = string(args[2])
 		}
 		http.HandleFunc("/", handler)
+		fmt.Println("Serving on port " + port)
 		http.ListenAndServe(":"+port, nil)
-		fmt.Println("Running")
 
 	}
 }
