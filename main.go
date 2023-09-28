@@ -95,5 +95,47 @@ func main() {
 		fmt.Println("Serving on port " + port)
 		http.ListenAndServe(":"+port, nil)
 
+	} else if args[1] == "checkip" {
+		if len(args) > 2 {
+			ip := args[2]
+			resp, err := http.Get("http://api.ipstack.com/" + ip + "?access_key=c7ceecbdf42731fd5e0a58271ebf8b43")
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			defer resp.Body.Close()
+
+			// Reading the response body
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+
+			// Unmarshalling the JSON response
+			var data map[string]interface{}
+			err = json.Unmarshal(body, &data)
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+
+			// Printing the important information
+			fmt.Println("IP Address:", data["ip"])
+			fmt.Println("Country:", data["country_name"])
+			fmt.Println("Region:", data["region_name"])
+			fmt.Println("City:", data["city"])
+			fmt.Println("Latitude:", data["latitude"], "Longitude:", data["longitude"])
+			fmt.Println("Zip Code:", data["zip"])
+			connection, ok := data["connection"].(map[string]interface{})
+			if !ok {
+				fmt.Println("Error: could not parse connection information")
+				return
+			}
+			fmt.Println("ISP:", connection["isp"])
+
+		} else {
+			fmt.Println("You must pass an IP address with geolocate.")
+		}
 	}
 }
