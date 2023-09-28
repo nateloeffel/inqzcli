@@ -21,7 +21,7 @@ func main() {
 			cmd := exec.Command("git", "clone", "https://github.com/nateloeffel/BaseDiscordBot.git")
 			_, err := cmd.CombinedOutput()
 			if err != nil {
-				fmt.Println("Error:", err),
+				fmt.Println("Error:", err)
 				return
 			}
 
